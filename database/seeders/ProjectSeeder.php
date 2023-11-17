@@ -17,14 +17,14 @@ class ProjectSeeder extends Seeder
     public function run(Faker $faker): void
     {
         $types = Type::pluck('id'); // The pluck method retrieves all of the values for a given key:
-        
+
         for ($i = 0; $i < 10; $i++) {
             $project = new Project();
 
             $project->type_id = $faker->randomElement($types);
             $project->title = $faker->realText(50);
             $project->slug = Str::slug($project->title, '-');
-            $project->thumb = 'thumbs/' . $faker->image('public/storage/thumbs', 600, 480, 'Project', false);
+            $project->thumb = 'thumbs/' . $faker->image('public/storage/thumbs', 640, 480, 'Project', false);
             // $project->thumb = $faker->imageUrl(category: 'Projects');
             $project->description = $faker->realText();
             // $project->tech = $faker->company();
