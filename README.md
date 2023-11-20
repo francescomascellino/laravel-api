@@ -154,7 +154,7 @@ Route::get('projects/latest', function () {
 });
 ```
 
-OTTENERE SINGOLO POST TRAMITE SLUG
+OTTENERE SINGOLO PROGETTO TRAMITE SLUG
 ```php
 Route::get('projects/{project:slug}', function ($slug) {
 
