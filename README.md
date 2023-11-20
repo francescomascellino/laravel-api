@@ -142,3 +142,37 @@ E INSERIRLA NEL VALORE DELLA CHIAVE:
 ```php
 'allowed_origins' => ['APP_FRONTEND_URL', 'http://localhost:5174'], // IL SECONDO E' UN VALORE DI DEFAULT
 ```
+
+OTTENERE GLI ULTIMI TRE PROJECTS
+```php
+Route::get('projects/latest', function () {
+    $latest = Project::with('type', 'technologies')->OrderbyDesc('id')->take(3)->get();
+    return response()->json([
+        'status' => 'success',
+        'result' => $latest
+    ]);
+});
+```
+
+OTTENERE SINGOLO POST TRAMITE SLUG
+```php
+Route::get('projects/{project:slug}', function ($slug) {
+
+    $project = Project::with('type', 'technologies')->where('slug', $slug)->first();
+
+    if ($project) {
+        return response()->json([
+        'success' => 'true',
+        'result' => $project 
+        ]);
+    } else {
+        return response()->json([
+        'success' => 'false',
+        'result' => 'Project not found' 
+        ]);
+    }
+});
+```
+
+CREARE CONTROLLERS E MODELLI PER API/ProjectController, API/TypeController, API/TechnologyController DOVE INSERIRE LE ROTTE
+
