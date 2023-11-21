@@ -44,12 +44,12 @@ Route::get('projects/{project:slug}', function ($slug) {
 
     if ($project) {
         return response()->json([
-            'success' => 'true',
+            'success' => true,
             'result' => $project
         ]);
     } else {
         return response()->json([
-            'success' => 'false',
+            'success' => false,
             'result' => 'Project not found'
         ]);
     }
