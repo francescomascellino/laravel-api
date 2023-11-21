@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Project;
+use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,32 +30,6 @@ Route::get('projects', function () {
     ]);
 });
 
-// ROUTES TUTTI I TYPES CON PROGETTI (index())
-Route::get('types', function () {
-    $types = Type::with('projects')->paginate();
-    return response()->json([
-        'status' => 'success',
-        'result' => $types
-    ]);
-});
-
-// ROUTE SINGOLO TYPE CON PROGETTI (show())
-Route::get('types/{type:slug}', function ($slug) {
-
-    $type = Type::with('projects', 'projects.technologies', 'projects.type')->where('slug', $slug)->first();
-
-    if ($type) {
-        return response()->json([
-            'success' => true,
-            'result' => $type
-        ]);
-    } else {
-        return response()->json([
-            'success' => false,
-            'result' => 'Type not found'
-        ]);
-    }
-});
 
 // ROUTE ULTIMI 3 PROGETTI (latest())
 Route::get('projects/latest', function () {
@@ -79,6 +54,60 @@ Route::get('projects/{project:slug}', function ($slug) {
         return response()->json([
             'success' => false,
             'result' => 'Project not found'
+        ]);
+    }
+});
+
+// ROUTE TUTTI I TYPES (index())
+Route::get('types', function () {
+    $types = Type::OrderBy('name')->get();
+    return response()->json([
+        'status' => 'success',
+        'result' => $types
+    ]);
+});
+
+// ROUTE SINGOLO TYPE CON PROGETTI E TECHNOLOGIES (show())
+Route::get('types/{type:slug}', function ($slug) {
+
+    $type = Type::with('projects', 'projects.technologies', 'projects.type')->where('slug', $slug)->first();
+
+    if ($type) {
+        return response()->json([
+            'success' => true,
+            'result' => $type
+        ]);
+    } else {
+        return response()->json([
+            'success' => false,
+            'result' => 'Type not found'
+        ]);
+    }
+});
+
+// ROUTE TUTTE LE TECHNOLOGIES (index())
+Route::get('technologies', function () {
+    $technologies = Technology::OrderBy('name')->get();
+    return response()->json([
+        'status' => 'success',
+        'result' => $technologies
+    ]);
+});
+
+// ROUTE SINGOLA TECHNOLOGY CON PROGETTI E TYPE (show())
+Route::get('technologies/{technology:slug}', function ($slug) {
+
+    $technology = Technology::with('project', 'project.technologies', 'project.type')->where('slug', $slug)->first();
+
+    if ($technology) {
+        return response()->json([
+            'success' => true,
+            'result' => $technology
+        ]);
+    } else {
+        return response()->json([
+            'success' => false,
+            'result' => 'Technology not found'
         ]);
     }
 });
