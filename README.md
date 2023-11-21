@@ -177,6 +177,10 @@ Route::get('projects/{project:slug}', function ($slug) {
 CREARE CONTROLLERS E MODELLI PER API/ProjectController, API/TypeController, API/TechnologyController DOVE INSERIRE LE ROTTE
 
 ES: ***API/TechnologyController***:
+```bash
+php artisan make:controller API/TechnologyController --resource --model=Technology
+```
+
 ```php
 public function index()
     {
