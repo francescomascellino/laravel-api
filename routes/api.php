@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ProjectController;
+use App\Http\Controllers\API\TechnologyController;
 use App\Http\Controllers\API\TypeController;
 use App\Models\Project;
 use App\Models\Technology;
@@ -92,16 +93,17 @@ Route::get('types', [TypeController::class, 'index']);
 Route::get('types/{type:slug}', [TypeController::class, 'show']);
 
 // ROUTE TUTTE LE TECHNOLOGIES (index())
-Route::get('technologies', function () {
+/* Route::get('technologies', function () {
     $technologies = Technology::OrderBy('name')->get();
     return response()->json([
         'status' => 'success',
         'result' => $technologies
     ]);
-});
+}); */
+Route::get('technologies', [TechnologyController::class, 'index']);
 
 // ROUTE SINGOLA TECHNOLOGY CON PROGETTI E TYPE (show())
-Route::get('technologies/{technology:slug}', function ($slug) {
+/* Route::get('technologies/{technology:slug}', function ($slug) {
 
     $technology = Technology::with('project', 'project.technologies', 'project.type')->where('slug', $slug)->first();
 
@@ -116,4 +118,5 @@ Route::get('technologies/{technology:slug}', function ($slug) {
             'result' => 'Technology not found'
         ]);
     }
-});
+}); */
+Route::get('technologies/{technology:slug}', [TechnologyController::class, 'show']);

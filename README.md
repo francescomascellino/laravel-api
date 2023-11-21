@@ -176,3 +176,40 @@ Route::get('projects/{project:slug}', function ($slug) {
 
 CREARE CONTROLLERS E MODELLI PER API/ProjectController, API/TypeController, API/TechnologyController DOVE INSERIRE LE ROTTE
 
+ES: ***API/TechnologyController***:
+```php
+public function index()
+    {
+        $technologies = Technology::OrderBy('name')->get();
+        return response()->json([
+            'status' => 'success',
+            'result' => $technologies
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($slug)
+    {
+        $technology = Technology::with('project', 'project.technologies', 'project.type')->where('slug', $slug)->first();
+
+        if ($technology) {
+            return response()->json([
+                'success' => true,
+                'result' => $technology
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'result' => 'Technology not found'
+            ]);
+        }
+    }
+```
+
+AGGIORNARE ***api.php***
+```php
+Route::get('technologies', [TechnologyController::class, 'index']);
+Route::get('technologies/{technology:slug}', [TechnologyController::class, 'show']);
+```
