@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ProjectController;
 use App\Models\Project;
 use App\Models\Technology;
 use App\Models\Type;
@@ -22,26 +23,27 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // ROUTE TUTTI I PROGETTI (index())
-Route::get('projects', function () {
+/* Route::get('projects', function () {
     $projects = Project::with('type', 'technologies')->OrderbyDesc('id')->paginate(6);
     return response()->json([
-        'status' => 'success',
+        'success' => true,
         'result' => $projects
     ]);
-});
-
+}); */
+Route::get('projects', [ProjectController::class, 'index']);
 
 // ROUTE ULTIMI 3 PROGETTI (latest())
-Route::get('projects/latest', function () {
+/* Route::get('projects/latest', function () {
     $latest = Project::with('type', 'technologies')->OrderbyDesc('id')->take(3)->get();
     return response()->json([
-        'status' => 'success',
+        'success' => true,
         'result' => $latest
     ]);
-});
+}); */
+Route::get('projects/latest', [ProjectController::class, 'latest']);
 
 // ROUTE SINGOLO PROGETTO (show())
-Route::get('projects/{project:slug}', function ($slug) {
+/* Route::get('projects/{project:slug}', function ($slug) {
 
     $project = Project::with('type', 'technologies')->where('slug', $slug)->first();
 
@@ -56,13 +58,14 @@ Route::get('projects/{project:slug}', function ($slug) {
             'result' => 'Project not found'
         ]);
     }
-});
+}); */
+Route::get('projects/{project:slug}', [ProjectController::class, 'show']);
 
 // ROUTE TUTTI I TYPES (index())
 Route::get('types', function () {
     $types = Type::OrderBy('name')->get();
     return response()->json([
-        'status' => 'success',
+        'success' => true,
         'result' => $types
     ]);
 });
