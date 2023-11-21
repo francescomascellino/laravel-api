@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Project;
+use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,33 @@ Route::get('projects', function () {
         'status' => 'success',
         'result' => $projects
     ]);
+});
+
+// ROUTES TUTTI I TYPES CON PROGETTI (index())
+Route::get('types', function () {
+    $types = Type::with('projects')->paginate();
+    return response()->json([
+        'status' => 'success',
+        'result' => $types
+    ]);
+});
+
+// ROUTE SINGOLO TYPE CON PROGETTI (show())
+Route::get('types/{type:slug}', function ($slug) {
+
+    $type = Type::with('projects', 'projects.technologies', 'projects.type')->where('slug', $slug)->first();
+
+    if ($type) {
+        return response()->json([
+            'success' => true,
+            'result' => $type
+        ]);
+    } else {
+        return response()->json([
+            'success' => false,
+            'result' => 'Type not found'
+        ]);
+    }
 });
 
 // ROUTE ULTIMI 3 PROGETTI (latest())
