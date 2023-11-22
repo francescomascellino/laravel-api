@@ -18,7 +18,7 @@ class LeadController extends Controller
     {
         // MANUAL VALIDATION
         $validator = Validator::make($request->all(), [
-            'name' => 'required|mx:100',
+            'name' => 'required|max:100',
             'email' => 'required|email',
             'phone' => 'required',
             'message' => 'required',
