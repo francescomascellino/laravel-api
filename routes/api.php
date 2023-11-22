@@ -120,3 +120,5 @@ Route::get('technologies', [TechnologyController::class, 'index']);
     }
 }); */
 Route::get('technologies/{technology:slug}', [TechnologyController::class, 'show']);
+
+Route::post('/lead', [LeadController::class, 'store']);

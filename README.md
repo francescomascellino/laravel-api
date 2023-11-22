@@ -255,13 +255,14 @@ CREARE VIEW DI MARKUP IN viewv/mail/
 
 OPPURE CREARE UNA CLASSE CON MARKDOWN CHE CREERA' DIRETTAMENTE IL FILE E LA CARTELLA
 ```bash
-php artisan make:mail NomeClasse (NewLeadEmailMd) --markdown
+php artisan make:mail FromLeadEmail --markdown
 ```
 
-SU NewLeadEmailMd:
+SU ***FromLeadEmail***:
 
 https://laravel.com/docs/10.x/mail#configuring-the-sender
 ```php
+// VARIABILE CONTENENTE ISTANZA DEL MODELLO Lead
 public $lead;
 
     /**
@@ -275,7 +276,8 @@ public $lead;
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('admin@example.com', 'Admin Example'), // not global from adress
+            // CHIEDERE
+            from: new Address('admin@portfolio.com', 'Portfolio'), // INSERIRE UN INDIRIZZO ALTERNATIVO AL FILE .env. SE FOSSE VUOTO?
             replyTo: '',
             subject: 'New Lead Email',
         );
@@ -291,23 +293,23 @@ public $lead;
 
 CRARE CONTROLLER CHE RICEVE I DATI DEL FORM FRONT, LI SALVA IN DB E INVIA LA MAIL
 ```bash
-php artisan make:controller API/LeadController
+php artisan make:controller API/LeadController --model=Lead
 ```
 
-SU LeadController:
+SU ***LeadController***:
+https://laravel.com/docs/10.x/validation#manually-creating-validators
 ```php
 public function store(Request $request)
 {
     // VALIDATE
-    // https://laravel.com/docs/10.x/validation#manually-creating-validators
     $validator = Validator::make($request->all(), [
         'name' => 'required|mx:100'
-        'email' => 'emailrequired|email',
+        'email' => 'required|email',
         'phone' => 'required',
         'message' => 'required',
     ])
 
-    // RISULTATO SE FALLISCE
+    // SE LA VALIDAZIONE FALLISCE...
     if ($validator->fails()) {
             return response()->json([
                 'sussess' => false,
@@ -315,16 +317,16 @@ public function store(Request $request)
             ]);
         }
 
-    // Save new Lead IN DB
+    // SE LA VALIDAZIONE RIESCE, SALVA NEL DATABASE UNA ISTANZA DI Lead CONTENENTE I DATI DELLA Request
     $lead = Lead::create($request->all());
 
-    // send email TO ADMIN
-    Mail::to('admin@portfolio.com')->send(new NewLeadEmailMd($lead)); // MY EMAIL ADRESS
+    // INVIA UNA MAIL ALL'ADMIN
+    Mail::to('admin@portfolio.com')->send(new FromLeadEmail($lead)); // MY EMAIL ADRESS
 
-    // TODO: send a confirmation email to the user
-    Mail::to($lead->email)->send(new NewLeadEmailMd($lead)); // O ALTRO MODELLO
+    // INVIA UNA COPIA AL MITTENTE
+    Mail::to($lead->email)->send(new ToLeadEmail($lead)); // O ALTRO MODELLO DA CREARE APPOSITAMENTE
 
-    // return a json success response al mittente
+    // RITORNA AL FRONTEND UN JSON CON UN ESITO POSITIVO
     return response()->json(
         [
         'success' => true,
@@ -337,7 +339,7 @@ public function store(Request $request)
 
 api.php
 ```php
-Route::post('/lead', [LeadController:: class, 'store'])
+Route::post('/lead', [LeadController:: class, 'store']);
 ```
 
 LATO FRON VIEW DI CONTATTO
