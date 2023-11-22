@@ -217,3 +217,192 @@ AGGIORNARE ***api.php***
 Route::get('technologies', [TechnologyController::class, 'index']);
 Route::get('technologies/{technology:slug}', [TechnologyController::class, 'show']);
 ```
+
+## LARAVEL MAILABLES (EMAIL)
+
+CREARE MODELLO DOVE SALVARE DATI EMAIL
+```bash
+php artisan make:model Lead -m
+```
+
+Lead MODEL
+```php
+protected fillable campi form frontend
+```
+
+Lead MIGRATION
+```php
+protected $fillable = ['name', 'email', 'phone', 'message'];
+```
+
+```bash
+php artisan make:mail NewLeadEmail
+```
+
+REGISTRARSI SU mailtrap.io, SELEZIONARE MAILBOX E SMTP DI LARAVEL. COPIARE I DATI NEL FILE .env E COMPLETARE I CAMPI RICHIESTI
+```php
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME==***********
+MAIL_PASSWORD=***********
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="admin@portfolio.com" // MY EMAIL
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+CREARE VIEW DI MARKUP IN viewv/mail/
+
+OPPURE CREARE UNA CLASSE CON MARKDOWN CHE CREERA' DIRETTAMENTE IL FILE E LA CARTELLA
+```bash
+php artisan make:mail NomeClasse (NewLeadEmailMd) --markdown
+```
+
+SU NewLeadEmailMd:
+
+https://laravel.com/docs/10.x/mail#configuring-the-sender
+```php
+public $lead;
+
+    /**
+     * Create a new message instance.
+     */
+    public function __construct($lead)
+    {
+        $this->lead = $lead;
+    }
+
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            from: new Address('admin@example.com', 'Admin Example'), // not global from adress
+            replyTo: '',
+            subject: 'New Lead Email',
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'mail.new-lead-email-md',
+        );
+    }
+```
+
+CRARE CONTROLLER CHE RICEVE I DATI DEL FORM FRONT, LI SALVA IN DB E INVIA LA MAIL
+```bash
+php artisan make:controller API/LeadController
+```
+
+SU LeadController:
+```php
+public function store(Request $request)
+{
+    // VALIDATE
+    // https://laravel.com/docs/10.x/validation#manually-creating-validators
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|mx:100'
+        'email' => 'emailrequired|email',
+        'phone' => 'required',
+        'message' => 'required',
+    ])
+
+    // RISULTATO SE FALLISCE
+    if ($validator->fails()) {
+            return response()->json([
+                'sussess' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+
+    // Save new Lead IN DB
+    $lead = Lead::create($request->all());
+
+    // send email TO ADMIN
+    Mail::to('admin@portfolio.com')->send(new NewLeadEmailMd($lead)); // MY EMAIL ADRESS
+
+    // TODO: send a confirmation email to the user
+    Mail::to($lead->email)->send(new NewLeadEmailMd($lead)); // O ALTRO MODELLO
+
+    // return a json success response al mittente
+    return response()->json(
+        [
+        'success' => true,
+        'message' => 'mail sent'
+        ]
+    );
+
+}
+```
+
+api.php
+```php
+Route::post('/lead', [LeadController:: class, 'store'])
+```
+
+LATO FRON VIEW DI CONTATTO
+```js
+import axios from axios
+
+data() {
+    return {
+        store
+        loading: false, -> NEL SUBBMIT :disabled="loading"
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        errors: [],
+        success: null,
+    } 
+}
+
+// IN OGNI CAMPO DEL FORM AGGIUINGERE v-model PER OGNO CAMPO DEL FORM
+// v-model="name"
+
+// EDITARE IL TAG form
+// <form action="" v-on:submit.prevent="sendForm()">
+
+methods: {
+    sendForm() {
+        this.loading: true,
+
+        this.errors = [],
+
+        this.success = null,
+
+        const payload = [
+            name: this.name
+            //ECC
+        ];
+        console.log(payload)
+
+        axios.post(baseurl + 'api/lead/', payload).then(response=>{
+            console.log(response);
+
+            const success = response.data.success
+
+            if(!success) {
+                console.log(responsse.data.errors)
+                this.errors = responsse.data.errors // -> in pagina nel campo :class="{ 'is-invalid': errors.name }" SOTTO IL FORM un alert v-if="errors.nomecampo" con una ul>li v-for="message in errors.message" CON CONTENUTO {{ message }}
+            } else {
+                console.log(response)
+                console.log(responsedata.message)
+
+                //SVUOTA CAMPI
+                this.name = '',
+                this.email = '',
+                this.phone = '',
+                this.message = '',
+                this.phone = '',
+
+                this.success = responsedata.message, // -> in pagina <span v-if="success">{{ success }}</span>  
+            }
+            this.loading = false
+        })
+        .catch(error => {
+            console.error(err)
+        })
+    }
+}
+```
