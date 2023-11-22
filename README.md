@@ -339,7 +339,7 @@ public function store(Request $request)
 
 api.php
 ```php
-Route::post('/lead', [LeadController:: class, 'store']);
+Route::post('/lead', [LeadController::class, 'store']);
 ```
 
 LATO FRON VIEW DI CONTATTO
