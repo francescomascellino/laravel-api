@@ -343,67 +343,85 @@ Route::post('/lead', [LeadController::class, 'store']);
 ```
 
 LATO FRON VIEW DI CONTATTO
+
+
+DATA
 ```js
-import axios from axios
-
 data() {
-    return {
-        store
-        loading: false, -> NEL SUBBMIT :disabled="loading"
-        name: '',
-        email: '',
-        phone: '',
-        message: '',
-        errors: [],
-        success: null,
-    } 
-}
+        return {
+            store,
 
-// IN OGNI CAMPO DEL FORM AGGIUINGERE v-model PER OGNO CAMPO DEL FORM
-// v-model="name"
+            // NEL SUBBMIT :disabled="loading" O PER MOSTRARE UN LOADER:
+            // <span v-if="loading">Sending <i class="fa-solid fa-circle-notch fa-spin"></i></span>
+            loading: false,
 
-// EDITARE IL TAG form
-// <form action="" v-on:submit.prevent="sendForm()">
+            name: '',
+            email: '',
+            phone: '',
+            message: '',
+            errors: [],
 
+        }
+    },
+```
+IN OGNI CAMPO DEL FORM AGGIUINGERE v-model PER OGNO CAMPO DEL FORM
+ES: v-model="name"
+
+EDITARE IL TAG form
+```html
+<form action="" v-on:submit.prevent="sendForm()">
+```
+
+METHODS:
+```js
 methods: {
     sendForm() {
-        this.loading: true,
+        
+        // SVUOTA ERRORI E RISULTATI
+            this.errors = [];
 
-        this.errors = [],
+            this.success = null;
 
-        this.success = null,
+            // ASSEGNA A PAYLOAD I DATI DEL FORM
+            const payload = {
+                name: this.name,
+                email: this.email,
+                phone: this.phone,
+                message: this.message,
+            };
 
-        const payload = [
-            name: this.name
-            //ECC
-        ];
-        console.log(payload)
+        axios.post(this.store.baseUrl + 'api/lead/', payload)
+                .then(response =>{
 
-        axios.post(baseurl + 'api/lead/', payload).then(response=>{
-            console.log(response);
-
-            const success = response.data.success
+            // ASSEGNA A SUCCESS IL VALORE DI data.success. SE CI SONO callWithErrorHandling, QUESTA SARA' UNDEFINED ED ENTRERA' NELL'IF
+            const success = response.data.success;
 
             if(!success) {
-                console.log(responsse.data.errors)
-                this.errors = responsse.data.errors // -> in pagina nel campo :class="{ 'is-invalid': errors.name }" SOTTO IL FORM un alert v-if="errors.nomecampo" con una ul>li v-for="message in errors.message" CON CONTENUTO {{ message }}
+                console.log('Errors:', response.data.errors);
+
+                // ASSEGNA A this.errors IL VALORE DELLA RESPONSE errors IN MODO DA POTERLI USARE IN PAGINA
+                this.errors = response.data.errors;
+
+                // POSSONO ESSERES STAMPATI IN PAGINA -> campo del form :class="{ 'is-invalid': errors.name }" SOTTO IL FORM un alert v-if="errors.nomecampo" con una ul>li v-for="message in errors.message" CON CONTENUTO {{ message }}
+
             } else {
-                console.log(response)
-                console.log(responsedata.message)
+                console.log('VALIDATION PASSED:', response);
 
-                //SVUOTA CAMPI
-                this.name = '',
-                this.email = '',
-                this.phone = '',
-                this.message = '',
-                this.phone = '',
+                // SVUOTA I CAMPI
+                this.name = '';
+                this.email = '';
+                this.phone = '';
+                this.message = '';
+                this.phone = '';
 
-                this.success = responsedata.message, // -> in pagina <span v-if="success">{{ success }}</span>  
+                this.success = response.data.message;, // -> in pagina <span v-if="success">{{ success }}</span>  
             }
+
             this.loading = false
+
         })
-        .catch(error => {
-            console.error(err)
+        .catch(err => {
+        console.error(err);
         })
     }
 }
