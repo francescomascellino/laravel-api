@@ -31,8 +31,7 @@ class FromLeadEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            // CHIEDERE
-            from: new Address('admin@portfolio.com', 'Portfolio'),
+            from: new Address('noreply@portfolio.com', 'Francesco Mascellino'), // INDIRIZZO NOREPLY. E' IL FROM DI mailtrap.io
             replyTo: '',
             subject: 'New Email',
         );

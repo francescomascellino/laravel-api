@@ -37,7 +37,7 @@ class LeadController extends Controller
         $lead = Lead::create($request->all());
 
         // INVIA UNA MAIL ALL'ADMIN
-        Mail::to('admin@portfolio.com')->send(new FromLeadEmail($lead)); // MY EMAIL ADRESS
+        Mail::to('admin@mailtrap.io')->send(new FromLeadEmail($lead)); // MY EMAIL ADRESS, DOVE VENGONO REINDIRIZZATE LE MAIL INVIATE DALL'APP
 
         // INVIA UNA COPIA AL MITTENTE
         // Mail::to($lead->email)->send(new CREARE MODELLO($lead));

@@ -247,7 +247,7 @@ MAIL_PORT=2525
 MAIL_USERNAME==***********
 MAIL_PASSWORD=***********
 MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS="admin@portfolio.com" // MY EMAIL
+MAIL_FROM_ADDRESS="noreply@portfolio.com" // APP EMAIL
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
@@ -276,8 +276,7 @@ public $lead;
     public function envelope(): Envelope
     {
         return new Envelope(
-            // CHIEDERE
-            from: new Address('admin@portfolio.com', 'Portfolio'), // INSERIRE UN INDIRIZZO ALTERNATIVO AL FILE .env. SE FOSSE VUOTO?
+            from: new Address('noreply@portfolio.com', 'Portfolio'), // INDIRIZZO NOREPLY. E' IL FROM DI mailtrap.io
             replyTo: '',
             subject: 'New Lead Email',
         );
@@ -321,7 +320,7 @@ public function store(Request $request)
     $lead = Lead::create($request->all());
 
     // INVIA UNA MAIL ALL'ADMIN
-    Mail::to('admin@portfolio.com')->send(new FromLeadEmail($lead)); // MY EMAIL ADRESS
+    Mail::to('admin@mailtrap.io')->send(new FromLeadEmail($lead)); // MY EMAIL ADRESS, DOVE VENGONO REINDIRIZZATE LE MAIL INVIATE DALL'APP
 
     // INVIA UNA COPIA AL MITTENTE
     Mail::to($lead->email)->send(new ToLeadEmail($lead)); // O ALTRO MODELLO DA CREARE APPOSITAMENTE
