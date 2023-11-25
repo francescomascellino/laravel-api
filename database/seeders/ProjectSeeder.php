@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\Admin\GithubController;
 use App\Models\Project;
 use App\Models\Type;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,7 +15,8 @@ class ProjectSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(Faker $faker): void
+    // OLD SEEDER WITH FAKER
+    /* public function run(Faker $faker): void
     {
         $types = Type::pluck('id'); // The pluck method retrieves all of the values for a given key:
 
@@ -33,5 +35,11 @@ class ProjectSeeder extends Seeder
 
             $project->save();
         }
+    } */
+
+    public function run(): void
+    {
+        $githubController = new GithubController();
+        $githubController->fetchRepos();
     }
 }
