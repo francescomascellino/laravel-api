@@ -41,6 +41,6 @@ class Project extends Model
      */
     public function technologies(): BelongsToMany
     {
-        return $this->belongsToMany(Technology::class);
+        return $this->belongsToMany(Technology::class)->withPivot('percentage'); // AGGIUNGE LA COLONNA DELLA PERCENTUALE PRESENTE NELLA PIVOT ASSOCIATA AL PROGETTO
     }
 }

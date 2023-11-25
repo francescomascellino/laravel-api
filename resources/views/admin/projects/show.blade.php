@@ -26,11 +26,11 @@
                         <img class="img-fluid object-fit-cover" style="height: 400px"
                             src="{{ asset('storage/' . $project->thumb) }}">
                     @else
-                    <div class="d-flex flex-column justify-content-center bg-body-secondary" style="height: 400px">
-                        <h1 class="text-center"><i class="fa-regular fa-face-grin-beam-sweat"></i></h1>
-                        <h1 class="text-center">No avaiable preview</h1>
-                        <h1 class="text-center">for this project</h1>
-                    </div>
+                        <div class="d-flex flex-column justify-content-center bg-body-secondary" style="height: 400px">
+                            <h1 class="text-center"><i class="fa-regular fa-face-grin-beam-sweat"></i></h1>
+                            <h1 class="text-center">No avaiable preview</h1>
+                            <h1 class="text-center">for this project</h1>
+                        </div>
                     @endif
 
                     <div class="card-body">
@@ -45,6 +45,12 @@
                                 @forelse ($project->technologies as $technology)
                                     <li class="badge bg-success">
                                         <i class="fa-solid fa-code"></i> {{ $technology->name }}
+
+                                        {{-- TECHNOLOGY PERCENTAGE --}}
+                                        @if ($technology->pivot->percentage !== null && $technology->pivot->percentage > 0.99)
+                                            : {{ intval($technology->pivot->percentage) }}%
+                                        @endif
+
                                     </li>
                                 @empty
                                     <li class="badge bg-secondary"><i class="fa-regular fa-file"></i> None/Others</li>

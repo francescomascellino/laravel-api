@@ -23,7 +23,9 @@ class ProjectController extends Controller
         $page_title = 'Projects';
 
         // PAGINATION
-        $projects = Project::orderByDesc('id')->paginate(4);
+
+        // ADESSO ORDINA PER DATA
+        $projects = Project::orderByDesc('created_at')->paginate(4);
 
         $trashed_projects = Project::onlyTrashed()->get();
 

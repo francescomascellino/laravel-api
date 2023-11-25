@@ -13,7 +13,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::with('type', 'technologies')->OrderbyDesc('id')->paginate(6);
+        // ADESSO ORDINA PER DATA
+        $projects = Project::with('type', 'technologies')->Orderby('created_at')->paginate(6);
         return response()->json([
             'success' => true,
             'result' => $projects
@@ -45,7 +46,7 @@ class ProjectController extends Controller
      */
     public function latest()
     {
-        $latest = Project::with('type', 'technologies')->OrderbyDesc('id')->take(3)->get();
+        $latest = Project::with('type', 'technologies')->Orderby('created_at')->take(3)->get();
         return response()->json([
             'success' => true,
             'result' => $latest

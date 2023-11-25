@@ -4,8 +4,14 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\TechnologyController;
 use App\Http\Controllers\Admin\TypeController;
+use App\Http\Controllers\Admin\GithubController;
+use App\Http\Controllers\API\LeadController;
 use App\Http\Controllers\ProfileController;
+use App\Mail\FromLeadEmail;
+use App\Models\Lead;
 use App\Models\Project;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,7 +58,35 @@ Route::middleware('auth', 'verified') // PER GLI UTENTI LOGGATI & VERIFICATI
 
         // TECHNOLOGIES RESOURCE CONTROLLER ROUTES
         Route::resource('technologies', TechnologyController::class)->parameters(['technologies' => 'technology:slug']);
+
+        // FETCH REPOS FROM GITHUB
+        Route::get('fetch-repos', [GithubController::class, 'fetchRepos'])->name('github.fetch');
+
+        Route::get('leads', function () {
+            $leads = Lead::all();
+
+            $page_title = 'Messages';
+
+            return view('admin.leads.index', compact('leads', 'page_title'));
+        })->name('leads');
+
+        /* Route::post('leads/{lead}', function( Request $request, Lead $lead) {
+            dd($request->all());
+
+            $lead->update($request->all());
+            // CREARE CLASSE Mail LeadReplyMessage
+            Mail::to($lead->email)->send(new LeadReplyMessage($lead));
+        })->name('reply'); */
     });
+
+// FETCH REPOS FROM GITHUB
+// Route::get('fetch-repos', [GithubController::class, 'fetchRepos'])->name('github.fetch');
+
+// LINK TO MAIL RECEIVED (USE TO CHECK LAYOUT)
+Route::get('mailable', function () {
+    $lead = Lead::find(1);
+    return new FromLeadEmail($lead);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

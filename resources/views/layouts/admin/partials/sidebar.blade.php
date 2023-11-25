@@ -8,6 +8,9 @@
 
     use App\Models\Technology;
     $technologies_count = Technology::count();
+
+    use App\Models\Lead;
+    $leads_count = Lead::count();
 @endphp
 
 <nav id="sidebarMenu" class="col col-md-3 col-lg-2  bg-dark navbar-dark collapse sidebar d-md-block">
@@ -46,27 +49,41 @@
                     </ul>
                 </div>
 
+                {{-- DASHBOARD --}}
                 <a class="nav-link text-white {{ Route::currentRouteName() == 'admin.dashboard' ? 'bg-secondary' : '' }}"
                     href="{{ route('admin.dashboard') }}">
                     <i class="fa-solid fa-tachometer-alt fa-lg fa-fw"></i> Dashboard
                 </a>
 
+                {{-- MESSAGGI RICEVUTI --}}
+                <a class="nav-link text-white {{ Route::currentRouteName() == 'admin.leads' ? 'bg-secondary' : '' }}"
+                    href="{{ route('admin.leads') }}">
+                    <i class="fa-solid fa-inbox fa-lg fa-fw"></i> {{ __('Messages') }}
+                    {{ $leads_count ? '(' . $leads_count . ')' : '' }}
+                </a>
+
+                {{-- PROGETTI --}}
                 <a class="nav-link text-white {{ Route::currentRouteName() == 'admin.projects.index' ? 'bg-secondary' : '' }}"
                     href="{{ route('admin.projects.index') }}">
                     <i class="fa-solid fa-diagram-project fa-lg fa-fw"></i> {{ __('Projects') }}
                     {{ $projects_count ? '(' . $projects_count . ')' : '' }}
                 </a>
 
+                {{-- TYPES --}}
                 <a class="nav-link text-white {{ Route::currentRouteName() == 'admin.types.index' ? 'bg-secondary' : '' }}"
                     href="{{ route('admin.types.index') }}">
-                    <i class="fa-solid fa-tag fa-lg fa-fw"></i> {{ __('Project Types') }} {{ $types_count ? '(' . $types_count . ')' : '' }}
+                    <i class="fa-solid fa-tag fa-lg fa-fw"></i> {{ __('Project Types') }}
+                    {{ $types_count ? '(' . $types_count . ')' : '' }}
                 </a>
 
+                {{-- TECNOLOGIE --}}
                 <a class="nav-link text-white {{ Route::currentRouteName() == 'admin.technologies.index' ? 'bg-secondary' : '' }}"
                     href="{{ route('admin.technologies.index') }}">
-                    <i class="fa-solid fa-code fa-lg fa-fw"></i> {{ __('Projects Technologies') }} {{ $technologies_count ? '(' . $technologies_count  . ')' : '' }}
+                    <i class="fa-solid fa-code fa-lg fa-fw"></i> {{ __('Projects Technologies') }}
+                    {{ $technologies_count ? '(' . $technologies_count . ')' : '' }}
                 </a>
 
+                {{-- CESTINO --}}
                 <a class="nav-link text-white {{ Route::currentRouteName() == 'admin.projects.recycle' ? 'bg-secondary' : '' }}"
                     href="{{ route('admin.projects.recycle') }}">
                     <i class="fa-regular fa-trash-can fa-lg fa-fw"></i> {{ __('Recycle Bin') }}
