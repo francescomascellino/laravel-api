@@ -227,16 +227,24 @@ php artisan make:model Lead -m
 
 Lead MODEL
 ```php
-protected fillable campi form frontend
-```
-
-Lead MIGRATION
-```php
 protected $fillable = ['name', 'email', 'phone', 'message'];
 ```
 
-```bash
-php artisan make:mail NewLeadEmail
+Lead MIGRATION (INSERIRE I DATI DELLO Schema DELLA TABELLA DA CREARE)
+```php
+public function up(): void
+    {
+        Schema::create('leads', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('name', 100);
+            $table->string('email');
+            $table->string('phone');
+            $table->text('message');
+
+            $table->timestamps();
+        });
+    }
 ```
 
 REGISTRARSI SU mailtrap.io, SELEZIONARE MAILBOX E SMTP DI LARAVEL. COPIARE I DATI NEL FILE .env E COMPLETARE I CAMPI RICHIESTI
@@ -251,7 +259,11 @@ MAIL_FROM_ADDRESS="noreply@portfolio.com" // APP EMAIL
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-CREARE VIEW DI MARKUP IN viewv/mail/
+CREARE VIEW DI MARKUP IN views/mail/
+
+```bash
+php artisan make:mail FromLeadEmail
+```
 
 OPPURE CREARE UNA CLASSE CON MARKDOWN CHE CREERA' DIRETTAMENTE IL FILE E LA CARTELLA
 ```bash

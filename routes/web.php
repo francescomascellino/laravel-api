@@ -79,9 +79,6 @@ Route::middleware('auth', 'verified') // PER GLI UTENTI LOGGATI & VERIFICATI
         })->name('reply'); */
     });
 
-// FETCH REPOS FROM GITHUB
-// Route::get('fetch-repos', [GithubController::class, 'fetchRepos'])->name('github.fetch');
-
 // LINK TO MAIL RECEIVED (USE TO CHECK LAYOUT)
 Route::get('mailable', function () {
     $lead = Lead::find(1);
