@@ -27,7 +27,7 @@ class UpdateProjectRequest extends FormRequest
         return [
             'type_id' => 'nullable|exists:types,id', // exists CONTROLLA SE IL CAMPO id E' PRESENTE NELLA TABELLA types
             'title' => ['required', 'bail', 'min:3', 'max:200', Rule::unique('projects')->ignore($this->project)],
-            'thumb' => 'nullable|image|max:300',
+            'thumb' => 'nullable|image|max:500',
             'description' => 'nullable|bail|min:3|max:500',
             // 'tech' => 'nullable|bail|min:3|max:200',
             'github' => 'nullable|bail|min:3|max:2048|url:http,https',

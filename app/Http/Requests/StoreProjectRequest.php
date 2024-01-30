@@ -26,7 +26,7 @@ class StoreProjectRequest extends FormRequest
         return [
             'type_id' => 'nullable|exists:types,id',
             'title' => 'required|bail|min:3|max:200|unique:projects,title',
-            'thumb' => 'nullable|image|max:300',
+            'thumb' => 'nullable|image|max:500',
             'description' => 'nullable|bail|min:3|max:500',
             // 'tech' => 'nullable|bail|min:3|max:200',
             'technologies' => 'nullable|exists:technologies,id', // PUO' NON ESSERE SELEZIONATO E DEVE ESISTERE NELLA COLONNA DEGLI ID

@@ -20,9 +20,14 @@ class GithubController extends Controller
         /* $response = Http::withoutVerifying()
             ->get("https://877c697d-eb4a-43b7-9c7c-0ec1d8610218.mock.pstmn.io/https://api.github.com/users/$username/repos?per_page=5"); */
 
+        // OLD (30 PROJECTS)
+        /* $response = Http::withHeaders([
+            'Authorization' => 'TOKEN',
+            ])->withoutVerifying()->get("https://877c697d-eb4a-43b7-9c7c-0ec1d8610218.mock.pstmn.io/https://api.github.com/users/francescomascellino/repos?per_page=30&sort=created"); */
+
         $response = Http::withHeaders([
-            'Authorization' => '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',
-        ])->withoutVerifying()->get("https://877c697d-eb4a-43b7-9c7c-0ec1d8610218.mock.pstmn.io/https://api.github.com/users/francescomascellino/repos?per_page=30&sort=created");
+            'Authorization' => env('GITHUB_TOKEN'),
+        ])->withoutVerifying()->get("https://877c697d-eb4a-43b7-9c7c-0ec1d8610218.mock.pstmn.io/https://api.github.com/users/francescomascellino/repos?per_page=100&sort=created");
 
         if ($response->successful()) {
             $repositories = $response->json();
