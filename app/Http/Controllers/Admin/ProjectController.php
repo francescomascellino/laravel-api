@@ -132,7 +132,8 @@ class ProjectController extends Controller
     {
         $project->delete();
 
-        return to_route('admin.projects.index')->with('status', 'Well Done, Element Moved to the Recycle Bin Succeffully');
+        // return to_route('admin.projects.index')->with('status', 'Well Done, Element Moved to the Recycle Bin Succeffully');
+        return back()->with('status', 'Well Done, Element Moved to the Recycle Bin Succeffully');
     }
 
     public function recycle()
