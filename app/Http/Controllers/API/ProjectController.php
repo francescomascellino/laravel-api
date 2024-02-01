@@ -14,7 +14,7 @@ class ProjectController extends Controller
     public function index()
     {
         // ADESSO ORDINA PER DATA
-        $projects = Project::with('type', 'technologies')->Orderby('created_at')->paginate(6);
+        $projects = Project::with('type', 'technologies')->Orderby('created_at')->paginate(6)->onEachSide(1);
         return response()->json([
             'success' => true,
             'result' => $projects

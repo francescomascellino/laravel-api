@@ -13,7 +13,13 @@
                 class="fa-solid fa-file-circle-plus"></i> New Project</a>
 
         {{-- FETCH FROM GITHUB BUTTON --}}
-        <a href="{{ route('admin.github.fetch') }}" class="btn btn-primary my-3 icon-link"><i class="fa-brands fa-github"></i> Fetch GitHub</a>
+        <a href="{{ route('admin.github.fetch') }}" class="btn btn-primary my-3 icon-link"><i class="fa-brands fa-github"></i>
+            Fetch GitHub</a>
+
+        {{-- PAGINATION --}}
+        <div class="my-1">
+            {{ $projects->onEachSide(1)->links('pagination::bootstrap-5') }}
+        </div>
 
         <div class="card py-3 bg-light">
 
@@ -156,7 +162,7 @@
 
         {{-- PAGINATION --}}
         <div class="my-3">
-            {{ $projects->links('pagination::bootstrap-5') }}
+            {{ $projects->onEachSide(1)->links('pagination::bootstrap-5') }}
         </div>
 
         {{-- <h1>ADMIN/PROJECTS/INDEX.BLADE</h1> --}}
